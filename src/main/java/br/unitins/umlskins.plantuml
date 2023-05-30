@@ -1,0 +1,168 @@
+
+@startuml
+class Usuario{
+  
+  - id: Long
+  - nome: String
+  - email: String
+  - senha: String
+  - cpf: String
+  
+  
+  }
+
+class Telefone{
+  - id: Long
+  - codigoArea: String
+  - numero: String
+}
+
+class Endereco {
+
+  - id: long
+  - principal: Boolean
+  - cep: String
+  - rua: String
+  - bairro: String
+  - numero: String
+  - complemento: String
+  - logradouro: String
+
+}
+
+class Cidade {
+
+  - id: Long
+  - nome: String
+
+}
+
+class Estado{
+  - id: Long
+  - nome: String
+  - sigla: String
+}
+
+
+class Skins{
+
+  - id: Long
+  - nome: String
+  - tipo: String
+
+}
+
+class Compra{
+
+  - id:Long
+  - data:Date
+  - totalCompra: Double
+
+}
+
+class ItemCompra{
+  - id:Long
+  - quantidade:Integer
+  - preco: Double
+}
+
+class Pagamento{
+  - valor: Float
+}
+
+
+
+class Cartao{
+  - nomeTitular: String
+  - dataValidade: Date
+  - numeroCartao: String
+  - bandeira: String
+  - parcelas: int
+}
+
+
+class PagamentoPix{
+  - nome: String
+  - chave: String
+
+}
+
+class RegistroPagamento{
+  - pago: Boolean
+}
+
+class Loja{
+  - id:Long
+  - nome:String
+  - cnpj:String
+}
+
+class ChavePix{
+  - CPF: int
+  - ChaveAleatoria: int
+  - Email: int
+  - Telefone: int
+
+}
+
+class Produto{
+  - id:Long
+  - nome: String
+  - descricao: String
+  - estoque: Integer
+  - preco: Double
+}
+
+enum Raridade{
+
+- consumidor: int
+- militar: int
+- restrito: int
+- secreto: int
+- oculto: int
+- contrabando: int
+}
+
+enum TipoArma{
+
+  - pistola: int
+  - escopetas: int
+  - submetralhadores: int
+  - rifles: int
+  - riflesDePrecisao: int
+  - metralhadores: int 
+  - facas: int
+}
+
+
+
+Usuario "1" *--> "*" Endereco
+Usuario "*" --> "1" Produto :listaDesejo
+Usuario "1" *--> "1" Telefone :celular
+Usuario "1" *--> "1" Telefone :whatszap
+Usuario "*" --> "1" Loja
+Usuario "1" --> "1" Pagamento
+
+
+Endereco "*" --> "1" Cidade
+Cidade "*" --> "1" Estado
+
+PagamentoPix --|> Pagamento
+Pagamento "1" --> "1" RegistroPagamento
+ChavePix "1" *--> "1" PagamentoPix
+Cartao "1" --> "*" Pagamento
+
+
+Compra "*" --> "1" Usuario
+Compra "1" *--> "*" ItemCompra
+
+Skins --|> Produto
+Skins "*" --> "1" TipoArma
+Skins "*" --> "1" Raridade
+ItemCompra "*" --> "1" Skins
+Loja "1" --> "*" Produto
+
+
+
+
+@enduml
