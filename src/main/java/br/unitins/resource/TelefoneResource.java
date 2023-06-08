@@ -8,13 +8,12 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
+import org.jboss.logging.Logger;
 
 import br.unitins.application.Result;
-
-import br.unitins.dto.TelefoneDTO;
-import br.unitins.dto.TelefoneResponseDTO;
-import br.unitins.service.TelefoneService;
+import br.unitins.dto.telefone.TelefoneDTO;
+import br.unitins.dto.telefone.TelefoneResponseDTO;
+import br.unitins.service.telefone.TelefoneService;
 
 @Path("/telefone")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -24,8 +23,12 @@ public class TelefoneResource {
     @Inject
     TelefoneService telefoneService;
 
+    private static final Logger LOG = Logger.getLogger(TelefoneResource.class);
+
     @GET
     public List<TelefoneResponseDTO> getAll() {
+        LOG.info("Buscando todos os telefones.");
+        LOG.debug("ERRO DE DEBUG.");
         return telefoneService.getAll();
     }
 
@@ -37,20 +40,30 @@ public class TelefoneResource {
 
     @POST
     public Response insert(TelefoneDTO dto) {
+        // LOG.info("Inserindo um produto: " + dto.nome());
+        LOG.infof("Inserindo um telefone: %s", dto.numero());
+        Result result = null;
         try {
             TelefoneResponseDTO telefone = telefoneService.create(dto);
+            LOG.infof("Telefone (%d) criado com sucesso.", telefone.id());
             return Response.status(Status.CREATED).entity(telefone).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao incluir um estado.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
+
     }
 
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, TelefoneDTO dto) {
         try {
-            TelefoneResponseDTO telefone = telefoneService.update(id,dto);
+            TelefoneResponseDTO telefone = telefoneService.update(id, dto);
             return Response.status(Status.NO_CONTENT).entity(telefone).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());

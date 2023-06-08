@@ -5,12 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Pessoa extends DefaultEntity {
 
     @Column(length = 60)
     private String nome;
+
 
     public String getNome() {
         return nome;

@@ -1,13 +1,13 @@
 package br.unitins.resource;
 
 import br.unitins.application.Result;
-import br.unitins.dto.ProdutoDTO;
-import br.unitins.dto.ProdutoResponseDTO;
-import br.unitins.dto.UsuarioResponseDTO;
+import br.unitins.dto.produto.ProdutoDTO;
+import br.unitins.dto.produto.ProdutoResponseDTO;
+import br.unitins.dto.usuario.UsuarioResponseDTO;
 import br.unitins.form.ImageForm;
-import br.unitins.service.FileService;
-import br.unitins.service.ProdutoService;
-import br.unitins.service.UsuarioService;
+import br.unitins.service.file.FileService;
+import br.unitins.service.produto.ProdutoService;
+import br.unitins.service.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
@@ -17,6 +17,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.jboss.logging.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,8 +41,14 @@ public class ProdutoResource {
     @Inject
     JsonWebToken jwt;
 
+
+
+    private static final Logger LOG = Logger.getLogger(ProdutoResource.class);
+
     @GET
     public List<ProdutoResponseDTO> getAll() {
+        LOG.info("Buscando todos os produtos.");
+        LOG.debug("ERRO DE DEBUG.");
         return produtoService.getAll();
     }
 
@@ -51,15 +58,26 @@ public class ProdutoResource {
         return produtoService.findById(id);
     }
 
+
     @POST
     public Response insert(ProdutoDTO dto) {
-        try {
-            ProdutoResponseDTO produto = produtoService.create(dto);
-            return Response.status(Status.CREATED).entity(produto).build();
-        } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
-        }
+         // LOG.info("Inserindo um produto: " + dto.nome());
+         LOG.infof("Inserindo um produto: %s", dto.nome());
+         Result result = null;
+         try {
+             ProdutoResponseDTO produto = produtoService.create(dto);
+             LOG.infof("Produto (%d) criado com sucesso.", produto.id());
+             return Response.status(Status.CREATED).entity(produto).build();
+         } catch (ConstraintViolationException e) {
+             LOG.error("Erro ao incluir um produto.");
+             LOG.debug(e.getMessage());
+             result = new Result(e.getConstraintViolations());
+         } catch (Exception e) {
+             LOG.fatal("Erro sem identificacao: " + e.getMessage());
+             result = new Result(e.getMessage(), false);
+         }
+         return Response.status(Status.NOT_FOUND).entity(result).build();
+
     }
 
     @PUT

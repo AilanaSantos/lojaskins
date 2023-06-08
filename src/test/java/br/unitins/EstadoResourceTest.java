@@ -1,9 +1,8 @@
 package br.unitins;
 
-import br.unitins.dto.EstadoDTO;
-import br.unitins.dto.EstadoResponseDTO;
-import br.unitins.service.EstadoService;
-
+import br.unitins.dto.estado.EstadoDTO;
+import br.unitins.dto.estado.EstadoResponseDTO;
+import br.unitins.service.estado.EstadoService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 

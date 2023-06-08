@@ -1,15 +1,14 @@
 package br.unitins;
 
-import br.unitins.dto.CidadeResponseDTO;
-import br.unitins.dto.EstadoDTO;
-import br.unitins.service.EstadoService;
+import br.unitins.dto.cidade.CidadeDTO;
+import br.unitins.dto.cidade.CidadeResponseDTO;
+import br.unitins.dto.estado.EstadoDTO;
+import br.unitins.service.cidade.CidadeService;
+import br.unitins.service.estado.EstadoService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 
 import org.junit.jupiter.api.Test;
-
-import br.unitins.dto.CidadeDTO;
-import br.unitins.service.CidadeService;
 
 import jakarta.inject.Inject;
 

@@ -33,14 +33,6 @@ public class DefaultEntity {
         dataAlteracao = LocalDateTime.now();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId() {
-        this.id = id;
-    }
-
     public LocalDateTime getDataInclusao() {
         return dataInclusao;
     }
@@ -55,5 +47,13 @@ public class DefaultEntity {
 
     public void setDataAlteracao(LocalDateTime dataAlteracao) {
         this.dataAlteracao = dataAlteracao;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

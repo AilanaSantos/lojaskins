@@ -7,9 +7,8 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
-
-import jakarta.persistence.*;
 import java.util.List;
 import java.util.Set;
 
@@ -17,13 +16,14 @@ import java.util.Set;
 public class Usuario extends DefaultEntity {
 
     private String login;
-    private String nome;
     private String nomeImagem;
-    private String email;
     private String senha;
-    private String cpf;
-    private Sexo sexo;
 
+
+    private Compra compra;
+
+    
+    private Pagamento pagamento;
 
     @ElementCollection
     @CollectionTable(name= "perfis", joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "id"))
@@ -31,11 +31,11 @@ public class Usuario extends DefaultEntity {
     private Set<Perfil> perfis;
     
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     private List<Telefone> telefone;
 
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany
     private List<Endereco> endereco;
 
     @OneToOne
@@ -73,27 +73,6 @@ public class Usuario extends DefaultEntity {
         this.perfis = perfis;
     }
 
-    public Sexo getSexo() {
-        return sexo;
-    }
-
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getLogin() {
         return login;
     }
@@ -110,14 +89,6 @@ public class Usuario extends DefaultEntity {
         this.senha = senha;
     }
 
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
     public String getNomeImagem() {
         return nomeImagem;
     }
@@ -125,6 +96,19 @@ public class Usuario extends DefaultEntity {
     public void setNomeImagem(String nomeImagem) {
         this.nomeImagem = nomeImagem;
     }
+    public Compra getCompra() {
+        return compra;
+    }
+    public void setCompra(Compra compra) {
+        this.compra = compra;
+    }
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
+    
     
 
 }

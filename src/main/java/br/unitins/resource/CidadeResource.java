@@ -11,9 +11,11 @@ import jakarta.ws.rs.core.Response.Status;
 
 
 import br.unitins.application.Result;
-import br.unitins.dto.CidadeDTO;
-import br.unitins.dto.CidadeResponseDTO;
-import br.unitins.service.CidadeService;
+import br.unitins.dto.cidade.CidadeDTO;
+import br.unitins.dto.cidade.CidadeResponseDTO;
+import br.unitins.service.cidade.CidadeService;
+
+import org.jboss.logging.Logger;
 
 @Path("/cidades")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -24,26 +26,39 @@ public class CidadeResource {
     CidadeService cidadeService;
 
 
+    private static final Logger LOG = Logger.getLogger(CidadeResource.class);
+
     @GET
     public List<CidadeResponseDTO> getAll() {
+        LOG.info("Buscando todas as cidades.");
+        LOG.debug("ERRO DE DEBUG.");
         return cidadeService.getAll();
     }
-
     @GET
     @Path("/{id}")
     public CidadeResponseDTO findById(@PathParam("id") Long id) {
         return cidadeService.findById(id);
     }
 
+
     @POST
     public Response insert(CidadeDTO dto) {
+        // LOG.info("Inserindo um estado: " + dto.nome());
+        LOG.infof("Inserindo uma cidade: %s", dto.nome());
+        Result result = null;
         try {
             CidadeResponseDTO cidade = cidadeService.create(dto);
+            LOG.infof("Cidade (%d) criada com sucesso.", cidade.id());
             return Response.status(Status.CREATED).entity(cidade).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao incluir uma cidade.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @PUT

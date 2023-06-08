@@ -2,12 +2,12 @@ package br.unitins.resource;
 
 import java.util.List;
 
-import com.oracle.svm.core.annotate.Inject;
+import jakarta.inject.Inject;
 
 import br.unitins.application.Result;
-import br.unitins.dto.CompraDTO;
-import br.unitins.dto.CompraResponseDTO;
-import br.unitins.service.CompraService;
+import br.unitins.dto.compra.CompraDTO;
+import br.unitins.dto.compra.CompraResponseDTO;
+import br.unitins.service.compra.CompraService;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import jakarta.ws.rs.Consumes;
@@ -21,6 +21,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import org.jboss.logging.Logger;
 
 @Path("/compras")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -33,11 +34,14 @@ public class CompraResource {
     @Inject
     Validator validator;
 
+    private static final Logger LOG = Logger.getLogger(CompraResource.class);
+
     @GET
     public List<CompraResponseDTO> getAll() {
+        LOG.info("Buscando todas as compras.");
+        LOG.debug("ERRO DE DEBUG.");
         return compraService.getAll();
     }
-
     @GET
     @Path("/{id}")
     public CompraResponseDTO findById(@PathParam("id") Long id) {

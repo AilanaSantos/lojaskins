@@ -2,11 +2,11 @@ package br.unitins.resource;
 
 
 import br.unitins.dto.AuthUsuarioDTO;
-import br.unitins.dto.UsuarioResponseDTO;
+import br.unitins.dto.usuario.UsuarioResponseDTO;
 import br.unitins.model.Usuario;
-import br.unitins.service.HashService;
-import br.unitins.service.TokenJwtService;
-import br.unitins.service.UsuarioService;
+import br.unitins.service.hash.HashService;
+import br.unitins.service.tokenjwt.TokenJwtService;
+import br.unitins.service.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -53,16 +53,5 @@ public class AuthResource {
 
     }
 
-    @GET
-    @Path("/usuario")
-    @RolesAllowed({"User"})
-    public Response getPerfilUsuario() {
-
-        // obtendo o login a partir do token
-        String login = jwt.getSubject();
-        UsuarioResponseDTO usuario = usuarioService.findByLogin(login);
-
-        return Response.ok(usuario).build();
-    }
 
 }

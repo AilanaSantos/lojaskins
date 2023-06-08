@@ -1,8 +1,8 @@
 package br.unitins;
 
-import br.unitins.dto.SkinsDTO;
-import br.unitins.dto.SkinsResponseDTO;
-import br.unitins.service.SkinsService;
+import br.unitins.dto.skins.SkinsDTO;
+import br.unitins.dto.skins.SkinsResponseDTO;
+import br.unitins.service.skins.SkinsService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;

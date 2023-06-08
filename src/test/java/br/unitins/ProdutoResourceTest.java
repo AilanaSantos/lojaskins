@@ -1,8 +1,8 @@
 package br.unitins;
 
-import br.unitins.dto.ProdutoDTO;
-import br.unitins.dto.ProdutoResponseDTO;
-import br.unitins.service.ProdutoService;
+import br.unitins.dto.produto.ProdutoDTO;
+import br.unitins.dto.produto.ProdutoResponseDTO;
+import br.unitins.service.produto.ProdutoService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;

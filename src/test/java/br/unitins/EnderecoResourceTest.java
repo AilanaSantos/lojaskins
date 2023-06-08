@@ -1,8 +1,8 @@
 package br.unitins;
 
-import br.unitins.dto.EnderecoDTO;
-import br.unitins.dto.EnderecoResponseDTO;
-import br.unitins.service.EnderecoService;
+import br.unitins.dto.endereco.EnderecoDTO;
+import br.unitins.dto.endereco.EnderecoResponseDTO;
+import br.unitins.service.endereco.EnderecoService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;

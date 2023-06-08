@@ -2,8 +2,8 @@ package br.unitins.service;
 
 import java.util.List;
 
-import br.unitins.dto.PessoaFisicaDTO;
-import br.unitins.dto.PessoaFisicaResponseDTO;
+import br.unitins.dto.pessoa.PessoaFisicaDTO;
+import br.unitins.dto.pessoa.PessoaFisicaResponseDTO;
 
 public interface PessoaFisicaService {
 

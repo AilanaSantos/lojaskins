@@ -1,9 +1,9 @@
 package br.unitins;
 
 
-import br.unitins.dto.TelefoneDTO;
-import br.unitins.dto.TelefoneResponseDTO;
-import br.unitins.service.TelefoneService;
+import br.unitins.dto.telefone.TelefoneDTO;
+import br.unitins.dto.telefone.TelefoneResponseDTO;
+import br.unitins.service.telefone.TelefoneService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;

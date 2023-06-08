@@ -13,6 +13,12 @@ public class Result {
     public Result(String message) {
         this.success = true;
         this.message = message;
+        
+    }
+
+    public Result(String message, boolean success) {
+        this.success = success;
+        this.message = message;
     }
 
     public Result(Set<? extends ConstraintViolation<?>> violations) {

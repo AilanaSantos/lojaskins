@@ -2,15 +2,14 @@ package br.unitins.resource;
 
 import java.io.IOException;
 
-
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.application.Result;
-import br.unitins.dto.UsuarioResponseDTO;
+import br.unitins.dto.usuario.UsuarioResponseDTO;
 import br.unitins.form.ImageForm;
-import br.unitins.service.FileService;
-import br.unitins.service.UsuarioService;
+import br.unitins.service.file.FileService;
+import br.unitins.service.usuario.UsuarioService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -80,8 +79,5 @@ public class UsuarioLogadoResource {
         response.header("Content-Disposition", "attachment;filename=" + nomeImagem);
         return response.build();
     }
-
-
-    
 
 }
