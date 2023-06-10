@@ -92,6 +92,7 @@ public class CidadeServicelmpl implements CidadeService {
 
     }
 
+
     @Override
     public void delete(Long id) {
         cidadeRepository.deleteById(id);
