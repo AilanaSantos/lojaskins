@@ -3,6 +3,7 @@ package br.unitins.resource;
 import java.util.List;
 import org.jboss.logging.Logger;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.*;
@@ -29,6 +30,7 @@ public class EstadoResource {
     private static final Logger LOG = Logger.getLogger(EstadoResource.class);
 
     @GET
+    
     public List<EstadoResponseDTO> getAll() {
         LOG.info("Buscando todos os estados.");
         LOG.debug("ERRO DE DEBUG.");
@@ -37,11 +39,13 @@ public class EstadoResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public EstadoResponseDTO findById(@PathParam("id") Long id) {
         return estadoService.findById(id);
     }
 
     @POST
+    @RolesAllowed({ "Admin" })
     public Response insert(EstadoDTO dto) {
         // LOG.info("Inserindo um estado: " + dto.nome());
         LOG.infof("Inserindo um estado: %s", dto.nome());
@@ -64,6 +68,7 @@ public class EstadoResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response update(@PathParam("id") Long id, EstadoDTO dto) {
         try {
             EstadoResponseDTO estado = estadoService.update(id, dto);
@@ -76,6 +81,7 @@ public class EstadoResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
         estadoService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
@@ -83,12 +89,14 @@ public class EstadoResource {
 
     @GET
     @Path("/count")
+    @RolesAllowed({ "Admin" })
     public long count() {
         return estadoService.count();
     }
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed({ "Admin" })
     public List<EstadoResponseDTO> search(@PathParam("nome") String nome) {
         return estadoService.findByNome(nome);
 

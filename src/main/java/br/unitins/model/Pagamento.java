@@ -1,12 +1,15 @@
 package br.unitins.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Pagamento {
+public class Pagamento extends RegistroPagamento{
+
 
     private Float valor;
 
+    @ManyToOne
     private Compra compra;
 
     public Compra getCompra() {

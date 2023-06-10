@@ -1,10 +1,12 @@
 package br.unitins;
 
+import br.unitins.dto.AuthUsuarioDTO;
 import br.unitins.dto.estado.EstadoDTO;
 import br.unitins.dto.estado.EstadoResponseDTO;
 import br.unitins.service.estado.EstadoService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +21,23 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.junit.jupiter.api.BeforeEach;
+
 @QuarkusTest
 public class EstadoResourceTest {
+
+        private String token;
+
+        @BeforeEach
+        public void setUp() {
+                var auth = new AuthUsuarioDTO("Ailana", "coxinha");
+                Response response = (Response) given()
+                                .contentType("application/json")
+                                .body(auth).when()
+                                .post("/auth")
+                                .then().statusCode(200).extract().response();
+                token = response.header("Authorization");
+        }
 
     @Inject
     EstadoService estadoService;
@@ -28,6 +45,7 @@ public class EstadoResourceTest {
     @Test
     public void getAllTest() {
         given()
+                .header("Autorization", "Bearer " + token)
                 .when().get("/estados")
                 .then()
                 .statusCode(200);
@@ -43,6 +61,7 @@ public class EstadoResourceTest {
         EstadoResponseDTO estadoCriado = estadoService.create(estado);
 
         given()
+                .header("Autorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .body(estadoCriado)
                 .when().post("/estados")
@@ -70,6 +89,7 @@ public class EstadoResourceTest {
         EstadoResponseDTO estadoAtualizado = estadoService.update(id, estadoRequisicao);
 
         given()
+                .header("Autorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .body(estadoAtualizado)
                 .when().put("/estados/" + id)
@@ -93,6 +113,7 @@ public class EstadoResourceTest {
 
 
         given()
+                .header("Autorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .when().get("/estados/" + id)
                 .then()

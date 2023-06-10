@@ -59,7 +59,7 @@ public class SkinsServicelmpl implements SkinsService {
         
             Skins entity = new Skins();
             entity.setNome(skinsDTO.nome());
-            entity.setTipo(skinsDTO.tipo());
+            entity.setTipoDesgate(skinsDTO.tipo());
             skinsRepository.persist(entity);
 
             return new SkinsResponseDTO(entity);
@@ -79,7 +79,8 @@ public class SkinsServicelmpl implements SkinsService {
 
 
             skinsBanco.setNome(skinsDTO.nome());
-            skinsBanco.setTipo(skinsDTO.tipo());
+            skinsBanco.setTipoDesgate(skinsDTO.tipo());
+            
 
             skinsRepository.persist(skinsBanco);
 

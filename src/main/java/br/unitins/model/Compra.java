@@ -11,8 +11,6 @@ public class Compra extends DefaultEntity {
 
     private Double totalcompra;
 
-    
-
     public LocalDate getDate() {
         return date;
     }

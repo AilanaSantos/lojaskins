@@ -15,7 +15,7 @@ public record SkinsResponseDTO(
 
     public SkinsResponseDTO(Skins skins){
 
-        this(skins.getId(),skins.getTipo(),skins.getNome());
+        this(skins.getId(),skins.getTipoDesgate(),skins.getNome());
     }
 
 }

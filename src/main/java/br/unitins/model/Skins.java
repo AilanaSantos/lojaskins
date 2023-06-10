@@ -2,12 +2,39 @@ package br.unitins.model;
 
 import jakarta.persistence.Entity;
 
-
 @Entity
 public class Skins extends DefaultEntity {
 
     private String nome;
-    private String tipo;
+    private String tipoDesgate;
+    private Raridade raridade;
+    private TipoArma tipoArma;
+
+    
+
+    public TipoArma getTipoArma() {
+        return tipoArma;
+    }
+
+    public void setTipoArma(TipoArma tipoArma) {
+        this.tipoArma = tipoArma;
+    }
+
+    public Raridade getRaridade() {
+        return raridade;
+    }
+
+    public void setRaridade(Raridade raridade) {
+        this.raridade = raridade;
+    }
+
+    public String getTipoDesgate() {
+        return tipoDesgate;
+    }
+
+    public void setTipoDesgate(String tipoDesgate) {
+        this.tipoDesgate = tipoDesgate;
+    }
 
     public String getNome() {
         return nome;
@@ -17,11 +44,4 @@ public class Skins extends DefaultEntity {
         this.nome = nome;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 }

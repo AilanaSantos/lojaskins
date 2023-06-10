@@ -1,10 +1,13 @@
 package br.unitins;
 
+import br.unitins.dto.AuthUsuarioDTO;
 import br.unitins.dto.produto.ProdutoDTO;
 import br.unitins.dto.produto.ProdutoResponseDTO;
 import br.unitins.service.produto.ProdutoService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+
 import org.junit.jupiter.api.Test;
 
 import jakarta.inject.Inject;
@@ -15,8 +18,23 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.junit.jupiter.api.BeforeEach;
+
 @QuarkusTest
 public class ProdutoResourceTest {
+
+private String token;
+
+        @BeforeEach
+        public void setUp() {
+                var auth = new AuthUsuarioDTO("Ailana", "coxinha");
+                Response response = (Response) given()
+                                .contentType("application/json")
+                                .body(auth).when()
+                                .post("/auth")
+                                .then().statusCode(200).extract().response();
+                token = response.header("Authorization");
+        }
 
     @Inject
     ProdutoService produtoService;
@@ -24,6 +42,7 @@ public class ProdutoResourceTest {
     @Test
     public void getAllTest() {
         given()
+                .header("Autorization", "Bearer " + token)
                 .when().get("/produtos")
                 .then()
                 .statusCode(200);
@@ -40,6 +59,7 @@ public class ProdutoResourceTest {
         ProdutoResponseDTO produtoCriado = produtoService.create(produto);
 
         given()
+                .header("Autorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .body(produtoCriado)
                 .when().post("/produtos")
@@ -72,6 +92,7 @@ public class ProdutoResourceTest {
         ProdutoResponseDTO produtoAtualizado = produtoService.update(id, corpoRequisicao);
 
         given()
+                .header("Autorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .body(produtoAtualizado)
                 .when().put("/produtos/" + id)
@@ -96,6 +117,7 @@ public class ProdutoResourceTest {
         Long id = produtoService.create(produto).id();
 
         given()
+                .header("Autorization", "Bearer " + token)
                 .when().delete("/produtos/" + id)
                 .then()
                 .statusCode(204);

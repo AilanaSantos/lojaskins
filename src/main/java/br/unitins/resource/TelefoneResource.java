@@ -2,6 +2,7 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.*;
@@ -15,7 +16,7 @@ import br.unitins.dto.telefone.TelefoneDTO;
 import br.unitins.dto.telefone.TelefoneResponseDTO;
 import br.unitins.service.telefone.TelefoneService;
 
-@Path("/telefone")
+@Path("/telefones")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TelefoneResource {
@@ -26,6 +27,7 @@ public class TelefoneResource {
     private static final Logger LOG = Logger.getLogger(TelefoneResource.class);
 
     @GET
+    @RolesAllowed({ "Admin" })
     public List<TelefoneResponseDTO> getAll() {
         LOG.info("Buscando todos os telefones.");
         LOG.debug("ERRO DE DEBUG.");
@@ -33,12 +35,15 @@ public class TelefoneResource {
     }
 
     @GET
+    
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public TelefoneResponseDTO findById(@PathParam("id") Long id) {
         return telefoneService.findById(id);
     }
 
     @POST
+    @RolesAllowed({ "Admin" })
     public Response insert(TelefoneDTO dto) {
         // LOG.info("Inserindo um produto: " + dto.nome());
         LOG.infof("Inserindo um telefone: %s", dto.numero());
@@ -61,6 +66,7 @@ public class TelefoneResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response update(@PathParam("id") Long id, TelefoneDTO dto) {
         try {
             TelefoneResponseDTO telefone = telefoneService.update(id, dto);
@@ -73,6 +79,7 @@ public class TelefoneResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
         telefoneService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
@@ -86,6 +93,7 @@ public class TelefoneResource {
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed({ "Admin" })
     public List<TelefoneResponseDTO> search(@PathParam("nome") String nome) {
         return telefoneService.findByNome(nome);
 

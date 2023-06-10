@@ -1,5 +1,8 @@
 package br.unitins.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Perfil{
 
     ADMIN(1,"Admin"),
@@ -8,6 +11,7 @@ public enum Perfil{
     private int id;
     private String label;
 
+    
     Perfil(int id, String label){
         this.id = id;
         this.label = label;

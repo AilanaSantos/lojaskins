@@ -2,6 +2,7 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.*;
@@ -28,6 +29,7 @@ public class SkinsResource {
     private static final Logger LOG = Logger.getLogger(SkinsResource.class);
 
     @GET
+    
     public List<SkinsResponseDTO> getAll() {
         LOG.info("Buscando todas as skins.");
         LOG.debug("ERRO DE DEBUG.");
@@ -36,11 +38,13 @@ public class SkinsResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public SkinsResponseDTO findById(@PathParam("id") Long id) {
         return skinsService.findById(id);
     }
 
     @POST
+    @RolesAllowed({ "Admin" })
     public Response insert(SkinsDTO dto) {
         // LOG.info("Inserindo uma skin: " + dto.nome());
         LOG.infof("Inserindo uma skin: %s", dto.nome());
@@ -63,6 +67,7 @@ public class SkinsResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response update(@PathParam("id") Long id, SkinsDTO dto) {
         try {
             SkinsResponseDTO skins = skinsService.update(id, dto);
@@ -75,6 +80,7 @@ public class SkinsResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
         skinsService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
@@ -83,12 +89,14 @@ public class SkinsResource {
 
     @GET
     @Path("/count")
+    @RolesAllowed({ "Admin" })
     public long count(){
         return skinsService.count();
     }
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed({ "Admin" })
     public List<SkinsResponseDTO> search(@PathParam("nome") String nome){
         return skinsService.findByNome(nome);
         

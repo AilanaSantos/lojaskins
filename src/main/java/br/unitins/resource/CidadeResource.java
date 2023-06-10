@@ -2,6 +2,7 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.*;
@@ -29,6 +30,7 @@ public class CidadeResource {
     private static final Logger LOG = Logger.getLogger(CidadeResource.class);
 
     @GET
+    
     public List<CidadeResponseDTO> getAll() {
         LOG.info("Buscando todas as cidades.");
         LOG.debug("ERRO DE DEBUG.");
@@ -36,12 +38,14 @@ public class CidadeResource {
     }
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public CidadeResponseDTO findById(@PathParam("id") Long id) {
         return cidadeService.findById(id);
     }
 
 
     @POST
+    @RolesAllowed({ "Admin" })
     public Response insert(CidadeDTO dto) {
         // LOG.info("Inserindo um estado: " + dto.nome());
         LOG.infof("Inserindo uma cidade: %s", dto.nome());
@@ -63,6 +67,7 @@ public class CidadeResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response update(@PathParam("id") Long id, CidadeDTO dto) {
         try {
             CidadeResponseDTO cidade = cidadeService.update(id, dto);
@@ -75,6 +80,7 @@ public class CidadeResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
         cidadeService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
@@ -82,12 +88,14 @@ public class CidadeResource {
 
     @GET
     @Path("/count")
+    @RolesAllowed({ "Admin" })
     public long count() {
         return cidadeService.count();
     }
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed({ "Admin" })
     public List<CidadeResponseDTO> search(@PathParam("nome") String nome) {
         return cidadeService.findByNome(nome);
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.*;
@@ -27,6 +28,7 @@ public class EnderecoResource {
     private static final Logger LOG = Logger.getLogger(EnderecoResource.class);
 
     @GET
+    @RolesAllowed({ "Admin" })
     public List<EnderecoResponseDTO> getAll() {
         LOG.info("Buscando todos os enderecos.");
         LOG.debug("ERRO DE DEBUG.");
@@ -35,11 +37,13 @@ public class EnderecoResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public EnderecoResponseDTO findById(@PathParam("id") Long id) {
         return enderecoService.findById(id);
     }
 
     @POST
+    @RolesAllowed({ "Admin" })
     public Response insert(EnderecoDTO dto) {
         // LOG.info("Inserindo um endereco: " + dto.nome());
         LOG.infof("Inserindo um endereco: %s", dto.principal());
@@ -62,6 +66,7 @@ public class EnderecoResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response update(@PathParam("id") Long id, EnderecoDTO dto) {
         try {
             EnderecoResponseDTO endereco = enderecoService.update(id, dto);
@@ -74,6 +79,7 @@ public class EnderecoResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
         enderecoService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
@@ -81,12 +87,14 @@ public class EnderecoResource {
 
     @GET
     @Path("/count")
+    @RolesAllowed({ "Admin" })
     public long count() {
         return enderecoService.count();
     }
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed({ "Admin" })
     public List<EnderecoResponseDTO> search(@PathParam("nome") String nome) {
         return enderecoService.findByNome(nome);
 

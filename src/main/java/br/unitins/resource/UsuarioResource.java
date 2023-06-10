@@ -2,19 +2,20 @@ package br.unitins.resource;
 
 import java.util.List;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.MediaType;
+import br.unitins.application.Result;
 import br.unitins.dto.usuario.UsuarioDTO;
 import br.unitins.dto.usuario.UsuarioResponseDTO;
 import br.unitins.service.usuario.UsuarioService;
-import jakarta.validation.ConstraintViolationException;
 import org.jboss.logging.Logger;
-import br.unitins.application.Result;
 
-@Path("/usuario")
+@Path("/usuarios")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UsuarioResource {
@@ -25,6 +26,7 @@ public class UsuarioResource {
     private static final Logger LOG = Logger.getLogger(UsuarioResource.class);
 
     @GET
+    @RolesAllowed({ "Admin" })
     public List<UsuarioResponseDTO> getAll() {
         LOG.info("Buscando todos os usuarios.");
         LOG.debug("ERRO DE DEBUG.");
@@ -33,16 +35,15 @@ public class UsuarioResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public UsuarioResponseDTO findById(@PathParam("id") Long id) {
         return usuarioService.findById(id);
     }
 
-
-
     // @POST
     // public Response insert(UsuarioDTO dto) {
-    // LOG.info("Inserindo um usuario: " + dto.nome());
-    // LOG.infof("Inserindo um usuario: %s", dto.nome());
+    // LOG.info("Inserindo um usuario: " + dto.login());
+    // LOG.infof("Inserindo um usuario: %s", dto.login());
     // Result result = null;
     // try {
     // UsuarioResponseDTO usuario = usuarioService.create(dto);
@@ -60,23 +61,13 @@ public class UsuarioResource {
 
     // }
 
-    // @POST
-    // public Response insert(UsuarioDTO dto) {
-    // try {
-    // UsuarioResponseDTO usuariofisica = usuarioService.create(dto);
-    // return Response.status(Status.CREATED).entity(usuariofisica).build();
-    // } catch(ConstraintViolationException e) {
-    // Result result = new Result(e.getConstraintViolations());
-    // return Response.status(Status.NOT_FOUND).entity(result).build();
-    // }
-    // }
-    //
+    
     // @PUT
     // @Path("/{id}")
     // public Response update(@PathParam("id") Long id, UsuarioDTO dto) {
     // try {
-    // UsuarioResponseDTO usuariofisica = usuarioService.update(id, dto);
-    // return Response.ok(usuariofisica).build();
+    // UsuarioResponseDTO usuario = usuarioService.update(id,dto);
+    // return Response.ok(usuario).build();
     // } catch(ConstraintViolationException e) {
     // Result result = new Result(e.getConstraintViolations());
     // return Response.status(Status.NOT_FOUND).entity(result).build();
@@ -85,6 +76,7 @@ public class UsuarioResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
         usuarioService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
@@ -92,14 +84,18 @@ public class UsuarioResource {
 
     @GET
     @Path("/count")
+    @RolesAllowed({ "Admin" })
     public long count() {
         return usuarioService.count();
     }
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed({ "Admin" })
     public List<UsuarioResponseDTO> search(@PathParam("nome") String nome) {
         return usuarioService.findByNome(nome);
 
     }
+
+
 }

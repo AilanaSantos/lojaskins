@@ -11,7 +11,7 @@ public record UsuarioDTO(
 
                 List<EnderecoDTO> enderecos,
 
-                String Login,
+                String login,
                 String senha
 
 ) {

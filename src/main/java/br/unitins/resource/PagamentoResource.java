@@ -1,14 +1,13 @@
 package br.unitins.resource;
 
 import java.util.List;
-
+import org.jboss.logging.Logger;
+import br.unitins.application.Result;
+import br.unitins.dto.pagamento.PagamentoDTO;
+import br.unitins.dto.pagamento.PagamentoResponseDTO;
+import br.unitins.service.pagamento.PagamentoService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
-
-import br.unitins.application.Result;
-import br.unitins.dto.compra.CompraDTO;
-import br.unitins.dto.compra.CompraResponseDTO;
-import br.unitins.service.compra.CompraService;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import jakarta.ws.rs.Consumes;
@@ -22,41 +21,41 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import org.jboss.logging.Logger;
 
-@Path("/compras")
+
+@Path("/pagamentos")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class CompraResource {
-
+public class PagamentoResource {
+    
     @Inject
-    CompraService compraService;
+    PagamentoService pagamentoService;
 
     @Inject
     Validator validator;
 
-    private static final Logger LOG = Logger.getLogger(CompraResource.class);
+    private static final Logger LOG = Logger.getLogger(PagamentoResource.class);
 
     @GET
     @RolesAllowed({ "Admin" })
-    public List<CompraResponseDTO> getAll() {
-        LOG.info("Buscando todas as compras.");
+    public List<PagamentoResponseDTO> getAll() {
+        LOG.info("Buscando todas os Pagamentos.");
         LOG.debug("ERRO DE DEBUG.");
-        return compraService.getAll();
+        return pagamentoService.getAll();
     }
     @GET
     @Path("/{id}")
     @RolesAllowed({ "Admin" })
-    public CompraResponseDTO findById(@PathParam("id") Long id) {
-        return compraService.findById(id);
+    public PagamentoResponseDTO findById(@PathParam("id") Long id) {
+        return pagamentoService.findById(id);
     }
 
     @POST
     @RolesAllowed({ "Admin" })
-    public Response insert(CompraDTO dto) {
+    public Response insert(PagamentoDTO dto) {
         try {
-            CompraResponseDTO compra = compraService.create(dto);
-            return Response.status(Status.CREATED).entity(compra).build();
+            PagamentoResponseDTO pagamento = pagamentoService.create(dto);
+            return Response.status(Status.CREATED).entity(pagamento).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();
@@ -66,10 +65,10 @@ public class CompraResource {
     @PUT
     @Path("/{id}")
     @RolesAllowed({ "Admin" })
-    public Response update(@PathParam("id") Long id, CompraDTO dto) {
+    public Response update(@PathParam("id") Long id, PagamentoDTO dto) {
         try {
-            CompraResponseDTO compra = compraService.update(id, dto);
-            return Response.ok(compra).build();
+            PagamentoResponseDTO pagamento = pagamentoService.update(id, dto);
+            return Response.ok(pagamento).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();
@@ -80,7 +79,7 @@ public class CompraResource {
     @Path("/{id}")
     @RolesAllowed({ "Admin" })
     public Response delete(@PathParam("id") Long id) {
-        compraService.delete(id);
+        pagamentoService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
     }
 
@@ -88,14 +87,13 @@ public class CompraResource {
     @Path("/count")
     @RolesAllowed({ "Admin" })
     public long count() {
-        return compraService.count();
+        return pagamentoService.count();
     }
 
     @GET
     @Path("/search/{nome}")
     @RolesAllowed({ "Admin" })
-    public List<CompraResponseDTO> search(@PathParam("nome") String nome) {
-        return compraService.findByNome(nome);
+    public List<PagamentoResponseDTO> search(@PathParam("nome") String nome) {
+        return pagamentoService.findByNome(nome);
     }
-
 }
