@@ -1,19 +1,20 @@
 package br.unitins.dto.cidade;
 
+import br.unitins.dto.estado.EstadoResponseDTO;
 import br.unitins.model.Cidade;
-import br.unitins.model.Estado;
+
 
     
     public record CidadeResponseDTO (
     
         Long id,
         String nome,
-        Estado estado
+        EstadoResponseDTO estado
     
     ) {
         public CidadeResponseDTO(Cidade city){
     
-            this(city.getId(), city.getNome(), city.getEstado());
+            this(city.getId(), city.getNome(), new EstadoResponseDTO(city.getEstado()));
 
         }
 

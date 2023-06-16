@@ -27,7 +27,7 @@ public class SkinsResourceTest {
 
         @BeforeEach
         public void setUp() {
-                var auth = new AuthUsuarioDTO("Ailana", "coxinha");
+                var auth = new AuthUsuarioDTO("Ailana", "123");
                 Response response = (Response) given()
                                 .contentType("application/json")
                                 .body(auth).when()
@@ -42,7 +42,7 @@ public class SkinsResourceTest {
         @Test
         public void getAllTest() {
                 given()
-                                .header("Autorization", "Bearer " + token)
+                                .header("Authorization", "Bearer " + token)
                                 .when().get("/skins")
                                 .then()
                                 .statusCode(200);
@@ -57,7 +57,7 @@ public class SkinsResourceTest {
                 SkinsResponseDTO skinsCriado = skinsService.create(skins);
 
                 given()
-                                .header("Autorization", "Bearer " + token)
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
                                 .body(skinsCriado)
                                 .when().post("/skins")
@@ -85,7 +85,7 @@ public class SkinsResourceTest {
                 SkinsResponseDTO produtoAtualizado = skinsService.update(id, skinsRequisicao);
 
                 given()
-                                .header("Autorization", "Bearer " + token)
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
                                 .body(produtoAtualizado)
                                 .when().put("/skins/" + id)
@@ -107,12 +107,12 @@ public class SkinsResourceTest {
                 Long id = skinsService.create(skins).id();
 
                 given()
-                                .header("Autorization", "Bearer " + token)
+                                .header("Authorization", "Bearer " + token)
                                 .when().delete("/skins/" + id)
                                 .then()
                                 .statusCode(204);
 
-                // verificando se a pessoa fisica foi excluida
+                // verificando se skins foi excluida
                 SkinsResponseDTO skinsResponse = null;
                 try {
                         skinsResponse = skinsService.findById(id);

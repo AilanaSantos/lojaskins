@@ -17,7 +17,10 @@ import br.unitins.dto.endereco.EnderecoDTO;
 import br.unitins.dto.usuario.UsuarioDTO;
 import br.unitins.dto.usuario.UsuarioResponseDTO;
 import br.unitins.model.Endereco;
+import br.unitins.model.Sexo;
+import br.unitins.model.Telefone;
 import br.unitins.model.Usuario;
+import br.unitins.repository.CidadeRepository;
 import br.unitins.repository.EnderecoRepository;
 import br.unitins.repository.TelefoneRepository;
 import br.unitins.repository.UsuarioRepository;
@@ -35,6 +38,10 @@ public class UsuarioServicelmpl implements UsuarioService {
     EnderecoRepository enderecoRepository;
 
     @Inject
+
+    CidadeRepository cidadeRepository;
+
+    @Inject
     Validator validator;
 
     @Override
@@ -45,11 +52,14 @@ public class UsuarioServicelmpl implements UsuarioService {
 
     @Override
     public UsuarioResponseDTO findById(Long id) {
-        Usuario pessoafisica = usuarioRepository.findById(id);
-        if (pessoafisica == null)
+        Usuario usuario = usuarioRepository.findById(id);
+        if (usuario == null)
             throw new NotFoundException("Usuario não encontrado.");
-        return new UsuarioResponseDTO(pessoafisica);
+        return new UsuarioResponseDTO(usuario);
     }
+
+    
+
 
     // @Override
     // @Transactional

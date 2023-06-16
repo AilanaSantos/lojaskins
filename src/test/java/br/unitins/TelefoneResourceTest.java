@@ -27,7 +27,7 @@ public class TelefoneResourceTest {
 
         @BeforeEach
         public void setUp() {
-                var auth = new AuthUsuarioDTO("Ailana", "coxinha");
+                var auth = new AuthUsuarioDTO("Ailana", "123");
                 Response response = (Response) given()
                                 .contentType("application/json")
                                 .body(auth).when()
@@ -40,10 +40,10 @@ public class TelefoneResourceTest {
         TelefoneService telefoneService;
 
         @Test
-        public void getAllTest() {
+        public void TestGetAll() {
                 given()
-                                .header("Autorization", "Bearer " + token)
-                                .when().get("/telefone")
+                                .header("Authorization", "Bearer " + token)
+                                .when().get("/telefones")
                                 .then()
                                 .statusCode(200);
         }
@@ -60,7 +60,7 @@ public class TelefoneResourceTest {
                                 .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
                                 .body(telefoneCriado)
-                                .when().post("/telefone")
+                                .when().post("/telefones")
                                 .then()
                                 .statusCode(201)
                                 .body("id", notNullValue(),

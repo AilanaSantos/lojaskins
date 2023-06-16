@@ -2,24 +2,19 @@ package br.unitins.dto.estado;
 
 import br.unitins.model.Estado;
 
-public record EstadoResponseDTO (
-    
+public record EstadoResponseDTO(
 
-    Long id,
+        Long id,
 
-    String nome,
+        String nome,
 
-    String sigla
+        String sigla
 
+) {
 
-
-){
-
-    public EstadoResponseDTO(Estado estado){
+    public EstadoResponseDTO(Estado estado) {
 
         this(estado.getId(), estado.getNome(), estado.getSigla());
     }
-
-
 
 }

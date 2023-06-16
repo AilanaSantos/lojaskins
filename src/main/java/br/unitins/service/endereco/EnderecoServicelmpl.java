@@ -6,20 +6,19 @@ import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import jakarta.ws.rs.NotFoundException;
 import br.unitins.dto.endereco.EnderecoDTO;
 import br.unitins.dto.endereco.EnderecoResponseDTO;
 import br.unitins.model.Endereco;
-import br.unitins.repository.CidadeRepository;
 import br.unitins.repository.EnderecoRepository;
 
 @ApplicationScoped
 public class EnderecoServicelmpl implements EnderecoService {
 
-    @Inject
-    CidadeRepository cidadeRepository;
 
     @Inject
     EnderecoRepository enderecoRepository;
@@ -45,6 +44,7 @@ public class EnderecoServicelmpl implements EnderecoService {
     }
 
     @Override
+    @Transactional
     public EnderecoResponseDTO create(EnderecoDTO enderecoDTO) throws ConstraintViolationException {
 
         validar(enderecoDTO);
@@ -72,7 +72,13 @@ public class EnderecoServicelmpl implements EnderecoService {
     }
 
     @Override
+    @Transactional
     public EnderecoResponseDTO update(Long id, EnderecoDTO enderecoDTO) throws ConstraintViolationException {
+
+         Endereco enderecoUpdate = enderecoRepository.findById(id);
+        if (enderecoUpdate == null)
+            throw new NotFoundException("Endereco não encontrado.");
+        validar(enderecoDTO);
 
         Endereco entity = new Endereco();
         entity.setPrincipal(enderecoDTO.principal());
@@ -90,6 +96,7 @@ public class EnderecoServicelmpl implements EnderecoService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
 
         enderecoRepository.deleteById(id);
@@ -106,7 +113,7 @@ public class EnderecoServicelmpl implements EnderecoService {
 
     @Override
     public long count() {
-        return cidadeRepository.count();
+        return enderecoRepository.count();
     }
 
 }

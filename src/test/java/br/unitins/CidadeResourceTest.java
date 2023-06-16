@@ -4,6 +4,7 @@ import br.unitins.dto.AuthUsuarioDTO;
 import br.unitins.dto.cidade.CidadeDTO;
 import br.unitins.dto.cidade.CidadeResponseDTO;
 import br.unitins.dto.estado.EstadoDTO;
+import br.unitins.model.Estado;
 import br.unitins.service.cidade.CidadeService;
 import br.unitins.service.estado.EstadoService;
 import io.quarkus.test.junit.QuarkusTest;
@@ -25,113 +26,96 @@ import org.junit.jupiter.api.BeforeEach;
 @QuarkusTest
 public class CidadeResourceTest {
 
-    @Inject
-    CidadeService cidadeService;
+        @Inject
+        CidadeService cidadeService;
 
-    @Inject
-    EstadoService estadoService;
+        @Inject
+        EstadoService estadoService;
 
-    private String token;
+        private String token;
 
-    @BeforeEach
-    public void setUp() {
-        var auth = new AuthUsuarioDTO("Ailana", "coxinha");
-        Response response = (Response) given()
-                .contentType("application/json")
-                .body(auth).when()
-                .post("/auth")
-                .then().statusCode(200).extract().response();
-        token = response.header("Authorization");
-    }
-
-    @Test
-    public void getAllTest() {
-        given()
-                .header("Autorization", "Bearer " + token)
-                .when().get("/cidades")
-                .then()
-                .statusCode(200);
-    }
-
-    @Test
-    public void testInsert() {
-
-        EstadoDTO estado = new EstadoDTO("Sao Paulo", "SP");
-
-        CidadeDTO cidade = new CidadeDTO(
-                null,
-                1L,
-                "Santos");
-
-        given()
-                .header("Autorization", "Bearer " + token)
-                .contentType(ContentType.JSON)
-                .body(cidade)
-                .when().post("/cidades")
-                .then()
-                .statusCode(201)
-                .body("id", notNullValue(),
-                        "id", is(null),
-                        "idEstado", is(1L),
-                        "nome", is("Santos"));
-
-    }
-
-    @Test
-    public void testUpdate() {
-        Long id = estadoService.create(new EstadoDTO("Sao Paulo", "SP")).id();
-        CidadeDTO cidade = new CidadeDTO(
-                null,
-                1L,
-                "Santos");
-
-        // Criando outra cidade para atuailzacao
-        CidadeDTO cidadeRequisicao = new CidadeDTO(
-                null,
-                1L,
-                "Barrolandia");
-
-        CidadeResponseDTO produtoAtualizado = cidadeService.update(id, cidadeRequisicao);
-
-        given()
-                .header("Autorization", "Bearer " + token)
-                .contentType(ContentType.JSON)
-                .body(produtoAtualizado)
-                .when().put("/cidades/" + id)
-                .then()
-                .statusCode(200);
-
-        // Verificando se os dados foram atualizados no banco de dados
-        CidadeResponseDTO produtoResponse = cidadeService.findById(id);
-        assertThat(produtoResponse.id(), is(1L));
-        assertThat(produtoResponse.nome(), is("Barrolandia"));
-
-    }
-
-    @Test
-    public void testDelete() {
-        CidadeDTO cidade = new CidadeDTO(
-                null,
-                1L,
-                "Santos");
-
-        Long id = cidadeService.create(cidade).id();
-
-        given()
-                .header("Autorization", "Bearer " + token)
-                .when().delete("/cidades/" + id)
-                .then()
-                .statusCode(204);
-
-        // verificando se a cidade foi excluida
-        CidadeResponseDTO cidadeResponse = null;
-        try {
-            cidadeResponse = cidadeService.findById(id);
-        } catch (Exception e) {
-            assert true;
-        } finally {
-            assertNull(cidadeResponse);
+        @BeforeEach
+        public void setUp() {
+                var auth = new AuthUsuarioDTO("Ailana", "123");
+                Response response = (Response) given()
+                                .contentType("application/json")
+                                .body(auth).when()
+                                .post("/auth")
+                                .then().statusCode(200).extract().response();
+                token = response.header("Authorization");
         }
-    }
+
+        @Test
+        public void testGetAll() {
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .when().get("/cidades")
+                                .then()
+                                .statusCode(200);
+        }
+
+        @Test
+        public void testInsert() {
+
+                Long id = estadoService.create(new EstadoDTO("Sao Paulo", "SP")).id();
+                CidadeDTO cidade = new CidadeDTO("Santos",id);
+
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(ContentType.JSON)
+                                .body(cidade)
+                                .when().post("/cidades")
+                                .then()
+                                .statusCode(201)
+                                .body("id", notNullValue(),
+                                                "nome", is("Santos"),
+                                                "estado", notNullValue(Estado.class));
+        }
+
+        @Test
+        public void testUpdate() {
+                Long id = estadoService.create(new EstadoDTO("Sao Paulo", "SP")).id();
+                CidadeDTO cidade = new CidadeDTO("Santos",id);
+                Long idCidade = cidadeService.create(cidade).id();
+
+                // Criando outra cidade para atuailzacao
+                CidadeDTO cidadeAtualizada = new CidadeDTO("Barrolandia",id);
+
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(ContentType.JSON)
+                                .body(cidadeAtualizada)
+                                .when().put("/cidades/" + idCidade)
+                                .then()
+                                .statusCode(204);
+
+                // Verificando se os dados foram atualizados no banco de dados
+                CidadeResponseDTO cidadeResponse = cidadeService.findById(id);
+                assertThat(cidadeResponse.nome(), is("Barrolandia"));
+                assertThat(cidadeResponse.estado(), notNullValue());
+        }
+
+        @Test
+        public void testDelete() {
+                 Long id = estadoService.create(new EstadoDTO("Tocantins", "TO")).id();
+                CidadeDTO cidade = new CidadeDTO("Santos",id);
+                Long idCidade = cidadeService.create(cidade).id();
+
+                given()
+                                .header("Authorization", "Bearer " + token)
+                                .when().delete("/cidades/" + idCidade)
+                                .then()
+                                .statusCode(204);
+
+                // verificando se a cidade foi excluida
+                CidadeResponseDTO cidadeResponse = null;
+                try {
+                        cidadeResponse = cidadeService.findById(id);
+                } catch (Exception e) {
+                        assert true;
+                } finally {
+                        assertNull(cidadeResponse);
+                }
+        }
 
 }

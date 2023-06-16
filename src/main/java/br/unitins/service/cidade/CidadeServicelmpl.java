@@ -24,8 +24,6 @@ public class CidadeServicelmpl implements CidadeService {
     @Inject
     CidadeRepository cidadeRepository;
 
-    
-
     @Inject
     EstadoRepository estadoRepository;
 
@@ -52,17 +50,17 @@ public class CidadeServicelmpl implements CidadeService {
 
     @Override
     @Transactional
-    public CidadeResponseDTO create(CidadeDTO cidadeDTO) throws ConstraintViolationException {
+    public CidadeResponseDTO update(Long id, CidadeDTO cidadeDTO) throws ConstraintViolationException {
 
         validar(cidadeDTO);
+        Cidade cidadeBanco = cidadeRepository.findById(id);
+        if (cidadeBanco == null) {
+            throw new NotFoundException("Cidade não encontrada pelo id");
+        }
+        cidadeBanco.setNome(cidadeDTO.nome());
 
-        Cidade entity = new Cidade();
-        entity.setEstado(new Estado());
-        entity.getEstado().setId(cidadeDTO.idEstado());
-        entity.setNome(cidadeDTO.nome());
-
-        cidadeRepository.persist(entity);
-        return new CidadeResponseDTO(entity);
+        cidadeRepository.persist(cidadeBanco);
+        return new CidadeResponseDTO(cidadeBanco);
 
     }
 
@@ -75,23 +73,19 @@ public class CidadeServicelmpl implements CidadeService {
 
     @Override
     @Transactional
-    public CidadeResponseDTO update(Long id, CidadeDTO cidadeDTO) throws ConstraintViolationException {
+    public CidadeResponseDTO create(CidadeDTO cidadeDTO) throws ConstraintViolationException {
 
         validar(cidadeDTO);
-        Cidade cidadeBanco = cidadeRepository.findById(id);
-        if (cidadeBanco == null) {
-            throw new NotFoundException("Cidade não encontrada pelo id");
-        }
-        cidadeBanco.setEstado(new Estado());
-        cidadeBanco.getEstado().setId(cidadeDTO.idEstado());
-        cidadeBanco.setNome(cidadeDTO.nome());
 
-        cidadeRepository.persist(cidadeBanco);
+        Cidade entity = new Cidade();
+        entity.setNome(cidadeDTO.nome());
+        entity.setEstado(new Estado());
+        entity.getEstado().setId(cidadeDTO.idEstado());
 
-        return new CidadeResponseDTO(cidadeBanco);
+        cidadeRepository.persist(entity);
+        return new CidadeResponseDTO(entity);
 
     }
-
 
     @Override
     public void delete(Long id) {

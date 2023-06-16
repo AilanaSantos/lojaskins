@@ -4,15 +4,21 @@ import java.util.List;
 
 import br.unitins.dto.endereco.EnderecoDTO;
 import br.unitins.dto.telefone.TelefoneDTO;
+import jakarta.validation.constraints.NotBlank;
 
 public record UsuarioDTO(
 
-                List<TelefoneDTO> telefones,
+        @NotBlank(message = "O campo precisa ser preenchido.") 
+        String nome,
+        String cpf,
 
-                List<EnderecoDTO> enderecos,
+        Integer idSexo,
 
-                String login,
-                String senha
+        List<TelefoneDTO> telefones,
+
+        List<EnderecoDTO> enderecos
+
+        
 
 ) {
 

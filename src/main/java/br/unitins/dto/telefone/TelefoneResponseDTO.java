@@ -1,23 +1,20 @@
 package br.unitins.dto.telefone;
 
-import jakarta.validation.constraints.NotBlank;
-
-
 import br.unitins.model.Telefone;
 
 public record TelefoneResponseDTO(
 
-    Long id,
-    @NotBlank(message = "O campo nome deve ser informado.")
-    String numero,
+        Long id,
 
-    String codigoarea
+        String numero,
 
-){
+        String codigoarea
 
-    public  TelefoneResponseDTO(Telefone tele){
+) {
 
-        this(tele.getId(),tele.getNumero(),tele.getCodigoArea());
+    public TelefoneResponseDTO(Telefone tele) {
+
+        this(tele.getId(), tele.getNumero(), tele.getCodigoArea());
     }
 
 }

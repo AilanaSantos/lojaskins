@@ -27,7 +27,7 @@ public class TelefoneResource {
     private static final Logger LOG = Logger.getLogger(TelefoneResource.class);
 
     @GET
-    @RolesAllowed({ "Admin" })
+    @RolesAllowed({ "Admin","User" })
     public List<TelefoneResponseDTO> getAll() {
         LOG.info("Buscando todos os telefones.");
         LOG.debug("ERRO DE DEBUG.");

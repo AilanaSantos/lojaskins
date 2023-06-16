@@ -42,27 +42,26 @@ insert into public.pagamento(
 	values (200.00, 1,'10-06-2013', '10-06-2013', 1);
 
 
--- insert into public.skins(
--- 	raridade, tipoarma, dataalteracao, datainclusao, id, nome, tipodesgate)
--- 	values (1, 1, '10-06-2013', '11-06-2013', 1, 'dragao', 'desgatada');
+ insert into public.skins(
+ 	raridade, tipoarma, dataalteracao, datainclusao, id, nome, tipodesgate)
+	values (1, 1, '10-06-2013', '11-06-2013', 1, 'dragao', 'desgatada');
 
 -- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- insert into public.produto(
--- 	estoque, preco, dataalteracao, datainclusao, id, descricao, nome)
--- 	values (20, 240.00,'10-06-2013' , '11-06-2013', 1, 'Skins Esmeralda', 'Ailana');
+ insert into public.produto(
+ 	estoque, preco, dataalteracao, datainclusao, id, descricao, nome)
+	values (20, 240.00,'10-06-2013' , '11-06-2013', 1, 'Skins Esmeralda', 'Ailana');
 
 
 --------------------------------------------
 insert into public.usuario(
 	compra_id, dataalteracao, datainclusao, id, pagamento_id, cpf, login, nome, nomeimagem, senha)
-	values (1,'10-06-2013', '11-06-2013', 1 , 1,'423642364', 'Ailana', 'Ailana', '?', 'Otf1xXVOiZtg2D8mH2sbbBykcKkF9SgzhC0T4kfegQ52WOgcrusaUCCZqnLftPuIvMN84o24bRMDHm9cGAESYw==');
+	values (1,'10-06-2013', '11-06-2013', 1 , 1,'423642364', 'Ailana', 'Ailana', '?', 'JlTXiVsQpXBB4N+5EpRtCsI3DXOibgjMlNtgKMQSdLgwGhiLmXNXYkb/ygS0zxWLWJbJ1ha6hfPOHDlWwjIF2Q==');
 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- insert into public.perfis(
- 	id_usuario, perfil)
-	values (1, 'admin');
+ insert into perfis(id_usuario, perfil) values (1, 'Admin');
 
+insert into perfis(id_usuario, perfil) values (1, 'User');
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 

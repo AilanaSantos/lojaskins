@@ -3,7 +3,9 @@ package br.unitins;
 import br.unitins.dto.AuthUsuarioDTO;
 import br.unitins.dto.endereco.EnderecoDTO;
 import br.unitins.dto.endereco.EnderecoResponseDTO;
+import br.unitins.service.cidade.CidadeService;
 import br.unitins.service.endereco.EnderecoService;
+import br.unitins.service.estado.EstadoService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -23,6 +25,15 @@ import org.junit.jupiter.api.BeforeEach;
 @QuarkusTest
 public class EnderecoResourceTest {
 
+        @Inject
+        EnderecoService enderecoService;
+
+        @Inject
+        CidadeService cidadeservice;
+
+        @Inject
+        EstadoService estadoservice;
+
         private String token;
 
         @BeforeEach
@@ -36,16 +47,14 @@ public class EnderecoResourceTest {
                 token = response.header("Authorization");
         }
 
-        @Inject
-        EnderecoService enderecoService;
-
         @Test
         public void getAllTest() {
                 given()
-                                .header("Autorization", "Bearer " + token)
+                                .header("Authorization", "Bearer " + token)
                                 .when().get("/enderecos")
                                 .then()
                                 .statusCode(200);
+
         }
 
         @Test
@@ -59,20 +68,23 @@ public class EnderecoResourceTest {
                                 "Casa",
                                 "Rua Brasil, Setor Aero");
 
-                EnderecoResponseDTO produtoCriado = enderecoService.create(endereco);
+                EnderecoResponseDTO enderecobanco = enderecoService.create(endereco);
 
                 given()
-                                .header("Autorization", "Bearer " + token)
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
-                                .body(produtoCriado)
+                                .body(enderecobanco)
                                 .when().post("/enderecos")
                                 .then()
                                 .statusCode(201)
                                 .body("id", notNullValue(),
-                                                "principal", is("Skin"),
-                                                "cep", is("Dragao"),
-                                                "rua", is(10),
-                                                "bairro", is(40.00F));
+                                                "principal", is("Rua Brasil"),
+                                                "cep", is("77660000"),
+                                                "rua", is("Rua Brasil"),
+                                                "bairro", is("Setor Aero"),
+                                                "numero", is("1786"),
+                                                "complemento", is("Casa"),
+                                                "logradouro", is("Rua Brasil, Setor Aero"));
 
         }
 
@@ -90,19 +102,19 @@ public class EnderecoResourceTest {
                 Long id = enderecoService.create(endereco).id();
 
                 // Criando outra pessoa para atuailzacao
-                EnderecoDTO enderecoRequisicao = new EnderecoDTO(
-                                "Rua Salomao",
-                                "75670000",
-                                "Rua Salomao",
-                                "Setor Juventus",
+                EnderecoDTO enderecoUpdate = new EnderecoDTO(
+                                "Rua Brasil",
+                                "77660000",
+                                "Rua Brasil",
+                                "Setor Aero",
                                 "1786",
                                 "Casa",
-                                "Rua Salomao, Setor Juventus");
+                                "Rua Brasil, Setor Aero");
 
-                EnderecoResponseDTO enderecoAtualizado = enderecoService.update(id, enderecoRequisicao);
+                EnderecoResponseDTO enderecoAtualizado = enderecoService.update(id, enderecoUpdate);
 
                 given()
-                                .header("Autorization", "Bearer " + token)
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(ContentType.JSON)
                                 .body(enderecoAtualizado)
                                 .when().put("/enderecos/" + id)
@@ -118,6 +130,7 @@ public class EnderecoResourceTest {
                 assertThat(enderecoResponse.numero(), is("1786"));
                 assertThat(enderecoResponse.complemento(), is("Casa"));
                 assertThat(enderecoResponse.logradouro(), is("Rua Salomao, Setor Juventus"));
+                
         }
 
         @Test
@@ -133,7 +146,7 @@ public class EnderecoResourceTest {
                 Long id = enderecoService.create(endereco).id();
 
                 given()
-                                .header("Autorization", "Bearer " + token)
+                                .header("Authorization", "Bearer " + token)
                                 .when().delete("/enderecos/" + id)
                                 .then()
                                 .statusCode(204);

@@ -4,6 +4,8 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -20,6 +22,9 @@ public class Usuario extends DefaultEntity {
     private String senha;
     private String nome;
     private String cpf;
+
+    @Enumerated(EnumType.STRING)
+    private Sexo sexo;
 
     @ManyToOne
     private Compra compra;
@@ -116,6 +121,14 @@ public class Usuario extends DefaultEntity {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
     }
 
 

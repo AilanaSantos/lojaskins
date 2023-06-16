@@ -42,24 +42,8 @@ public class EstadoServicelmpl implements EstadoService {
 
         Estado estado = estadoRepository.findById(id);
         if (estado == null)
-            return null;
+            throw new NotFoundException("Estado não encontrado.");
         return new EstadoResponseDTO(estado);
-    }
-
-    @Override
-    @Transactional
-    public EstadoResponseDTO create(EstadoDTO estadoDTO) throws ConstraintViolationException {
-
-        validar(estadoDTO);
-
-        Estado entity = new Estado();
-        entity.setSigla(estadoDTO.sigla());
-        entity.setNome(estadoDTO.nome());
-
-        estadoRepository.persist(entity);
-
-        return new EstadoResponseDTO(entity);
-
     }
 
     private void validar(EstadoDTO estadoDTO) throws ConstraintViolationException {
@@ -70,18 +54,32 @@ public class EstadoServicelmpl implements EstadoService {
     }
 
     @Override
-    public EstadoResponseDTO update(Long id, EstadoDTO estadoDTO) throws ConstraintViolationException{
+    @Transactional
+    public EstadoResponseDTO create(EstadoDTO estadoDTO) throws ConstraintViolationException {
+        validar(estadoDTO);
+
+        Estado entity = new Estado();
+        entity.setNome(estadoDTO.nome());
+        entity.setSigla(estadoDTO.sigla());
+
+        estadoRepository.persist(entity);
+        return new EstadoResponseDTO(entity);
+
+    }
+
+    @Override
+    @Transactional
+    public EstadoResponseDTO update(Long id, EstadoDTO estadoDTO) throws ConstraintViolationException {
         validar(estadoDTO);
         Estado estadoBanco = estadoRepository.findById(id);
-        if (estadoBanco == null) {
+        if (estadoBanco == null) 
             throw new NotFoundException("Estado não encontrado pelo id");
-        }
+         validar(estadoDTO);
 
-        estadoBanco.setSigla(estadoDTO.sigla());
         estadoBanco.setNome(estadoDTO.nome());
-
+        estadoBanco.setSigla(estadoDTO.sigla());
+        
         estadoRepository.persist(estadoBanco);
-
         return new EstadoResponseDTO(estadoBanco);
     }
 

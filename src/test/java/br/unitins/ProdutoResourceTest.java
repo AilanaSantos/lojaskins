@@ -27,7 +27,7 @@ private String token;
 
         @BeforeEach
         public void setUp() {
-                var auth = new AuthUsuarioDTO("Ailana", "coxinha");
+                var auth = new AuthUsuarioDTO("Ailana", "123");
                 Response response = (Response) given()
                                 .contentType("application/json")
                                 .body(auth).when()
@@ -42,7 +42,7 @@ private String token;
     @Test
     public void getAllTest() {
         given()
-                .header("Autorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + token)
                 .when().get("/produtos")
                 .then()
                 .statusCode(200);
@@ -59,7 +59,7 @@ private String token;
         ProdutoResponseDTO produtoCriado = produtoService.create(produto);
 
         given()
-                .header("Autorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .body(produtoCriado)
                 .when().post("/produtos")
@@ -92,7 +92,7 @@ private String token;
         ProdutoResponseDTO produtoAtualizado = produtoService.update(id, corpoRequisicao);
 
         given()
-                .header("Autorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .body(produtoAtualizado)
                 .when().put("/produtos/" + id)
@@ -117,7 +117,7 @@ private String token;
         Long id = produtoService.create(produto).id();
 
         given()
-                .header("Autorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + token)
                 .when().delete("/produtos/" + id)
                 .then()
                 .statusCode(204);

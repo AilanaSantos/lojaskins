@@ -14,8 +14,11 @@ import jakarta.ws.rs.core.Response.Status;
 import br.unitins.application.Result;
 import br.unitins.dto.cidade.CidadeDTO;
 import br.unitins.dto.cidade.CidadeResponseDTO;
+import br.unitins.dto.usuario.UsuarioResponseDTO;
 import br.unitins.service.cidade.CidadeService;
+import br.unitins.service.usuario.UsuarioService;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
 @Path("/cidades")
@@ -26,16 +29,35 @@ public class CidadeResource {
     @Inject
     CidadeService cidadeService;
 
+    @Inject
+    JsonWebToken jwt;
+
+    @Inject
+    UsuarioService usuarioService;
 
     private static final Logger LOG = Logger.getLogger(CidadeResource.class);
 
+
     @GET
-    
+    @RolesAllowed({ "Admin", "User" })
+    public Response getUsuario() {
+
+        // obtendo o login a partir do token
+        String login = jwt.getSubject();
+        UsuarioResponseDTO usuario = usuarioService.findByLogin(login);
+
+        return Response.ok(usuario).build();
+    }
+
+    @GET
+    @RolesAllowed({ "Admin" })
     public List<CidadeResponseDTO> getAll() {
         LOG.info("Buscando todas as cidades.");
         LOG.debug("ERRO DE DEBUG.");
         return cidadeService.getAll();
     }
+
+
     @GET
     @Path("/{id}")
     @RolesAllowed({ "Admin" })
@@ -46,12 +68,12 @@ public class CidadeResource {
 
     @POST
     @RolesAllowed({ "Admin" })
-    public Response insert(CidadeDTO dto) {
+    public Response insert(CidadeDTO cidadeDTO) {
         // LOG.info("Inserindo um estado: " + dto.nome());
-        LOG.infof("Inserindo uma cidade: %s", dto.nome());
+        LOG.infof("Inserindo uma cidade: %s", cidadeDTO.nome());
         Result result = null;
         try {
-            CidadeResponseDTO cidade = cidadeService.create(dto);
+            CidadeResponseDTO cidade = cidadeService.create(cidadeDTO);
             LOG.infof("Cidade (%d) criada com sucesso.", cidade.id());
             return Response.status(Status.CREATED).entity(cidade).build();
         } catch (ConstraintViolationException e) {
@@ -68,15 +90,24 @@ public class CidadeResource {
     @PUT
     @Path("/{id}")
     @RolesAllowed({ "Admin" })
-    public Response update(@PathParam("id") Long id, CidadeDTO dto) {
+    public Response update(@PathParam("id") Long id, CidadeDTO cidadeDTO) {
+        LOG.infof("Atualizando uma cidade: %s", cidadeDTO.nome());
+        Result result = null;
         try {
-            CidadeResponseDTO cidade = cidadeService.update(id, dto);
-            return Response.ok(cidade).build();
+            CidadeResponseDTO cidade = cidadeService.update(id, cidadeDTO);
+            LOG.infof("Cidade (%d) atualizada com sucesso.", cidade.id());
+            return Response.status(Status.NO_CONTENT).entity(cidade).build();
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            LOG.error("Erro ao atualizar uma cidade.");
+            LOG.debug(e.getMessage());
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            LOG.fatal("Erro sem identificacao: " + e.getMessage());
+            result = new Result(e.getMessage(), false);
         }
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
+
 
     @DELETE
     @Path("/{id}")

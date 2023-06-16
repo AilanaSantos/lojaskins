@@ -1,11 +1,15 @@
 package br.unitins.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 @Entity
 public class Estado extends DefaultEntity {
 
+    @Column(nullable = false, length = 60)
     private String nome;
+    
+    @Column(nullable = false, length = 2)
     private String sigla;
 
     public String getNome() {

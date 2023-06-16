@@ -33,7 +33,7 @@ public class HashServicelmpl implements HashService {
     public static void main(String[] args) {
         HashService service = new HashServicelmpl();
         System.out.println();
-        System.out.println(service.getHashSenha("coxinha"));
+        System.out.println(service.getHashSenha("123"));
         
     }
 
